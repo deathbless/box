@@ -47,9 +47,11 @@ def deldb(dir):
         targetFile = os.path.join(dir,file)
         if os.path.isfile(targetFile) and file == "db.sqlite3":
             os.remove(targetFile)
+        dbisdel = True
 
 def syncdb(url):
     urllib.urlretrieve(url, "db.sqlite3")
+    dbisdel = False
 
 def database():
     cx = sqlite3.connect("./db.sqlite3")
@@ -58,7 +60,11 @@ def database():
 
 
 def updatedb():
-
+    deldb(".")
+    while dbisdel == False:
+        pass
+    if dbisdel == True:
+        syncdb("")
 
 def query(filename):
     print filename
