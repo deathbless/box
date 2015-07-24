@@ -7,6 +7,7 @@ import urllib2
 import urllib
 import win32file
 import win32con
+import easygui
 
 ACTIONS = {
   1 : "Created",
@@ -57,6 +58,7 @@ def database():
     cx = sqlite3.connect("./db.sqlite3")
     cu = cx.cursor()
     order = cu.execute("SELECT * FROM openshop_order").fetchall()
+    
 
 
 def updatedb():
@@ -64,19 +66,17 @@ def updatedb():
     while dbisdel == False:
         pass
     if dbisdel == True:
-        syncdb("")
+        syncdb("http://10.180.87.93:8001/db.sqlite3")
 
 def query(filename):
-    print filename
+    easygui.ynbox(msg="open the box?", title="box")
+    cardid = filename.split(' ')[1]
+
 
 if __name__ == "__main__":
     flag = False
     init()
     while True:
-        now_time = time.time()
-        if now_time - start_time >= 10:
-            updatedb()
-            now_time = 0
         results = win32file.ReadDirectoryChangesW (
                                        hDir,  #handle: Handle to the directory to be monitored. This directory must be opened with the FILE_LIST_DIRECTORY access right.
                                        1024,  #size: Size of the buffer to allocate for the results.
@@ -100,8 +100,7 @@ if __name__ == "__main__":
                 if filename in dumps:
                     query(filename)
                 flag = False
-
-
+        continue
 
 
 
