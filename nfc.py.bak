@@ -1,5 +1,6 @@
-﻿import os
+import os
 import binascii
+import logging
 import time
 import sqlite3
 import urllib2
@@ -7,9 +8,6 @@ import urllib
 import win32file
 import win32con
 import easygui
-import sys
-reload(sys)
-sys.setdefaultencoding('utf-8')
 
 ACTIONS = {
   1 : "Created",
@@ -35,17 +33,10 @@ dumps = []
 dbisdel = False
 start_time = 0
 marked = []
-allbox = {}
-ordertobox = {}
-isset = []
 
 def init():
     global start_time
-    global allbox
     start_time = time.time()
-    for i in range(0, 100):
-        allbox[i] = 0
-    print "start"
 
 def readindata(filename):
     f = open(filename, 'rb')
@@ -71,31 +62,8 @@ def updatedb():
     if dbisdel == True:
         syncdb("http://10.180.95.217:8001/db.sqlite3")
 
-def savebox(orderid):
-    global marked
-    global allbox
-    global ordertobox
-    if orderid in ordertobox:
-        return
-    for i in allbox:
-        if allbox[i] == False:
-            ordertobox[orderid] = i
-            allbox[i] = True
-            url = "http://10.180.95.217:8000/openshop/set?box_id=%d&order_id=%d"%(i,orderid)
-            urllib2.urlopen(url)
-            marked.append(orderid)
-            break
-
-def delbox(orderid):
-    global allbox
-    global ordertobox
-    allbox [ordertobox[orderid]] = True
-
 def query(filename):
     global marked
-    global allbox
-    global isset
-    print filename
     cardid = filename.split(' ')[1]
     cx = sqlite3.connect("./db.sqlite3")
     cu = cx.cursor()
@@ -113,16 +81,15 @@ def query(filename):
                 type = "buy"
             if nfc_sell == cardid:
                 type = "sell"
-        elif orderid in marked:
-            delbox(orderid)
 
         if type == "buy" and is_set == False:
-            easygui.msgbox(msg="尊敬的买家(卡号%s)，您订单号为%d(卖家姓名为%s)的商品暂时还未收录！"%(cardid,orderid,seller),title = "中转箱")
-        if type == "buy" and is_set == True and orderid in ordertobox > 0:
-            easygui.msgbox(msg="尊敬的买家(卡号%s)，您订单号为%d(卖家姓名为%s)的商品在第%d号箱子里！"%(cardid,orderid,seller,ordertobox [orderid]), title="中转箱")
-        if type == "sell":
-            easygui.msgbox(msg="尊敬的卖家(卡号%s)，请放入您订单号为%d(卖家姓名为%s)的商品！"%(cardid,orderid,seller),title="中转箱")
-            savebox(orderid)
+            easygui.ynbox(msg="你是", title="box")
+
+
+
+
+
+
 
 
 if __name__ == "__main__":

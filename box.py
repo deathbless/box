@@ -15,7 +15,7 @@ def deldb(dir):
 def syncdb():
     print "download"
     global dbisdel
-    a = urllib2.urlopen("http://10.180.87.93:8001/db.sqlite3")
+    a = urllib2.urlopen("http://10.180.95.217:8001/db.sqlite3")
     data = a.read()
     code = open("db.sqlite3.bak", "wb")
     code.write(data)
@@ -27,6 +27,7 @@ def syncdb():
     if dbisdel == True:
         os.rename("db.sqlite3.bak", "db.sqlite3")
         dbisdel = False
+        print "download complete"
 
 
 def updatedb():
@@ -35,6 +36,7 @@ def updatedb():
 
 start_time = time.time()
 if __name__ == "__main__":
+    updatedb()
     while True:
         now_time = time.time()
         if now_time - start_time >= 10:

@@ -1,0 +1,2 @@
+import easygui
+easygui.msgbox("测试")
