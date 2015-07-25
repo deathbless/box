@@ -89,7 +89,7 @@ def savebox(orderid):
 def delbox(orderid):
     global allbox
     global ordertobox
-    allbox [ordertobox[orderid]] = True
+    allbox[ordertobox[orderid]] = True
 
 def query(filename):
     global marked
@@ -116,9 +116,9 @@ def query(filename):
         elif orderid in marked:
             delbox(orderid)
 
-        if type == "buy" and is_set == False:
+        if type == "buy" and is_set == False and orderid not in marked:
             easygui.msgbox(msg="尊敬的买家(卡号%s)，您订单号为%d(卖家姓名为%s)的商品暂时还未收录！"%(cardid,orderid,seller),title = "中转箱")
-        if type == "buy" and is_set == True and orderid in ordertobox > 0:
+        if type == "buy" and ((is_set == True and orderid in ordertobox > 0) or orderid in marked):
             easygui.msgbox(msg="尊敬的买家(卡号%s)，您订单号为%d(卖家姓名为%s)的商品在第%d号箱子里！"%(cardid,orderid,seller,ordertobox [orderid]), title="中转箱")
         if type == "sell":
             easygui.msgbox(msg="尊敬的卖家(卡号%s)，请放入您订单号为%d(卖家姓名为%s)的商品！"%(cardid,orderid,seller),title="中转箱")
