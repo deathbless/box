@@ -61,6 +61,7 @@ def deldb(dir):
         dbisdel = True
 
 def syncdb(url):
+    global dbisdel
     urllib.urlretrieve(url, "db.sqlite3")
     dbisdel = False
 
