@@ -82,7 +82,7 @@ def savebox(orderid):
         if allbox[i] == False:
             ordertobox[orderid] = i
             allbox[i] = True
-            url = "http://10.180.95.217:8000/openshop/set?box_id=%d&order_id=%d"%(i,orderid)
+            url = "http://10.180.85.205:8000/openshop/set?box_id=%d&order_id=%d"%(i,orderid)
             urllib2.urlopen(url)
             marked.append(orderid)
             break
@@ -101,6 +101,7 @@ def query(filename):
     cx = sqlite3.connect("./db.sqlite3")
     cu = cx.cursor()
     orderall = cu.execute("SELECT * FROM openshop_order").fetchall()
+    type = ""
     for order in orderall:
         orderid = order[0]
         seller = order[1]
@@ -124,6 +125,9 @@ def query(filename):
         if type == "sell":
             easygui.msgbox(msg="尊敬的卖家(卡号%s)，请放入您订单号为%d(卖家姓名为%s)的商品！"%(cardid,orderid,seller),title="中转箱")
             savebox(orderid)
+    if type == "":
+        easygui.msgbox(msg="您好(卡号%s)，没有找到您相关的订单信息！"%cardid,title="中转箱")
+    cx.close()
 
 
 if __name__ == "__main__":
